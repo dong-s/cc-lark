@@ -1,0 +1,27 @@
+{
+  "name": "cc-lark",
+  "version": "0.1.0",
+  "description": "Lark/Feishu channel for Claude Code via Open API",
+  "type": "module",
+  "bin": {
+    "cc-lark": "dist/cli.js",
+    "cc-lark-server": "dist/server.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "postinstall": "node scripts/download-whisper-model.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@larksuiteoapi/node-sdk": "^1.59.0",
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
