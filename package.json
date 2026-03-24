@@ -9,8 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
-    "postinstall": "node scripts/download-whisper-model.mjs"
+    "dev": "tsc --watch"
   },
   "engines": {
     "node": ">=18"

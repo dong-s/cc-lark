@@ -13,8 +13,8 @@
 - 支持 `plaintext` / `file` 两种 secret 存储方式
 - 入站消息自动添加 `Typing` reaction，成功回复后自动移除
 - 文本消息按 Feishu `post + md` 发送
-- 音频消息支持本地离线转写（`ffmpeg` + `whisper-cli`）
 - 图片消息会先下载到本地，再提示 Claude 用 `Read` 工具分析图片
+- 音频消息当前转发为 `[音频]`
 - 支持基础策略：`requireMention`、`dmPolicy`、`groupPolicy`
 - 支持飞书侧伪命令：`/help`、`/status`、`/new`、`/clear`、`/compact`
 
@@ -27,11 +27,6 @@ cd /path/to/Lark-channel
 npm install
 npm run build
 ```
-
-说明：
-- `npm install` 会自动尝试下载默认 whisper 模型 `ggml-base.bin`
-- 默认缓存目录：`~/.claude/channels/lark/models/`
-- 下载失败不会阻断安装，音频会自动回退为 `[音频]`
 
 ### 2. 注册 MCP Server
 
@@ -116,7 +111,7 @@ node dist/cli.js doctor
 | --- | --- |
 | `text` | 原样转发给 Claude |
 | `image` | 下载到本地临时文件，并提示 Claude 先用 `Read` 读取图片 |
-| `audio` | 优先尝试本地离线转写；失败则回退为 `[音频]` |
+| `audio` | 转发为 `[音频]` |
 | `file` | 转发为 `[文件]` |
 | `video` | 转发为 `[视频]` |
 | `media` | 转发为 `[media]` |
@@ -129,28 +124,6 @@ node dist/cli.js doctor
 - `/new`：让下一条消息按新话题转发给 Claude
 - `/clear`：等价于 `/new`，不是 Claude Code 原生 `/clear`
 - `/compact`：让 Claude 输出当前会话摘要
-
-## 音频转写
-
-依赖：
-
-```bash
-ffmpeg -version
-whisper-cli -h
-```
-
-macOS：
-
-```bash
-brew install ffmpeg
-brew install whisper-cpp
-```
-
-可选环境变量：
-- `WHISPER_MODEL_PATH`
-- `WHISPER_MODEL_CACHE_DIR`
-- `WHISPER_CLI_PATH`
-- `FFMPEG_PATH`
 
 ## 本地状态文件
 
@@ -176,5 +149,6 @@ brew install whisper-cpp
 - `pairing` 还没有独立配对流程
 - `allowFrom` / `groupAllowFrom` / `groups` 还没有可配置入口
 - `reaction` / `file` / `video` / `media` 的上下文仍比较简化
+- 音频消息当前只转发为 `[音频]`，不做内容识别
 - 目前只支持 `post + md` 文本样式，不支持卡片、流式状态、确认按钮等更完整交互
 - `reply.media` 不会和文本合并成同一条消息

@@ -11,7 +11,6 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { validateCredentials } from './auth.js';
-import { transcribeAudioMessage } from './audio-transcription.js';
 import { LarkAPI } from './lark-api.js';
 import {
   createDefaultChannelConfig,
@@ -593,16 +592,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 });
 
 async function buildForwardMessageText(account: ResolvedLarkChannelConfig, message: LarkMessage): Promise<string> {
-  if (message.messageType === 'audio') {
-    const result = await transcribeAudioMessage(new LarkAPI(account), message);
-    if (result.status === 'success') {
-      return `[音频转写]\n${result.transcript}`;
-    }
-
-    process.stderr.write(`[lark-channel] Audio transcription ${result.status}: ${result.reason} (message=${message.messageId})\n`);
-    return extractMessageText(message);
-  }
-
   if (message.messageType === 'image') {
     const result = await stageInboundImage(account, message);
     if (result.status === 'success') {
