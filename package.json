@@ -1,8 +1,12 @@
 {
-  "name": "cc-lark",
-  "version": "0.1.0",
+  "name": "cc-lark-channel",
+  "version": "1.0.0",
   "description": "Lark/Feishu channel for Claude Code via Open API",
   "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "bin": {
     "cc-lark": "dist/cli.js",
     "cc-lark-server": "dist/server.js"
