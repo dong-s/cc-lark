@@ -1,8 +1,8 @@
-# cc-lark
+# cc-lark-channel
 
 飞书 / Lark 的 Claude Code Channel MCP Server。
 
-基于官方 `@larksuiteoapi/node-sdk`，用官方长连接接收入站消息，用官方 Open API 发送、编辑、撤回消息和上传文件。项目定位是 **Claude Code 的 Lark Channel**，不是 OpenClaw 插件复刻。
+基于官方 `@larksuiteoapi/node-sdk`，用官方长连接接收入站消息，用官方 Open API 发送、编辑、撤回消息和上传文件。项目定位是 **Claude Code 的 Lark Channel**。
 
 ## 功能
 
@@ -14,49 +14,70 @@
 - 入站消息自动添加 `Typing` reaction，成功回复后自动移除
 - 文本消息按 Feishu `post + md` 发送
 - 图片消息会先下载到本地，再提示 Claude 用 `Read` 工具分析图片
-- 音频消息当前转发为 `[音频]`
 - 支持基础策略：`requireMention`、`dmPolicy`、`groupPolicy`
 - 支持飞书侧伪命令：`/help`、`/status`、`/new`、`/clear`、`/compact`
 
 ## 快速开始
 
-### 1. 安装
+### 1. 全局安装
 
 ```bash
-cd /path/to/Lark-channel
-npm install
-npm run build
+npm install -g cc-lark-channel
 ```
 
-### 2. 注册 MCP Server
+安装后会提供两个命令：
+- `cc-lark`：CLI 配置与诊断命令
+- `cc-lark-server`：MCP Server 启动命令
+
+### 2. 配置凭证
 
 ```bash
-claude mcp add -s user lark-channel node /path/to/Lark-channel/dist/server.js
+cc-lark config <appId> <appSecret> [domain] [secretMode]
 ```
 
-### 3. 启动 Claude Code
+### 3. 注册 MCP Server
+
+```bash
+claude mcp add -s user lark-channel cc-lark-server
+```
+
+### 4. 启动 Claude Code
 
 ```bash
 claude --dangerously-load-development-channels server:lark-channel
 ```
 
-### 4. 配置凭证
-
-命令行：
+### 5. 检查配置
 
 ```bash
-node dist/cli.js config <appId> <appSecret>
+cc-lark status
+cc-lark info
+cc-lark doctor
 ```
 
-或在 Claude Code 内直接调用 `login` 工具。
 
 ## CLI
 
-```bash
-node dist/cli.js --help
-node dist/cli.js status
-node dist/cli.js info
-node dist/cli.js doctor
+包名是 `cc-lark-channel`，安装后的命令名仍然是 `cc-lark` 和 `cc-lark-server`。
+
+```text
+cc-lark
+
+Usage:
+  cc-lark config <appId> <appSecret> [domain] [secretMode]
+  cc-lark status
+  cc-lark info
+  cc-lark doctor
+
+Commands:
+  config    Save and validate Lark/Feishu app credentials
+  status    Show whether credentials are configured
+  info      Show current channel configuration summary
+  doctor    Validate current configuration and secret resolution
+
+Arguments:
+  domain      feishu (default) or lark
+  secretMode  plaintext (default) or file
 ```
 
 `doctor` 会检查：
